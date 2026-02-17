@@ -71,4 +71,57 @@ with st.sidebar:
 # 4. Main Header Area
 col_logo, col_title = st.columns([1, 10])
 with col_logo:
-    st.image("https://raw.githubusercontent.com/mahendrakumar3749-arch/ai-excel/main/input_file_0.png", width=6
+    st.image("https://raw.githubusercontent.com/mahendrakumar3749-arch/ai-excel/main/input_file_0.png", width=60)
+with col_title:
+    st.title("AI Excel Wizard Pro")
+    st.caption("🚀 Generating complex formulas in milliseconds.")
+
+st.markdown("---")
+
+# API Setup
+try:
+    api_key = st.secrets["GOOGLE_API_KEY"]
+    genai.configure(api_key=api_key)
+except:
+    st.warning("⚠️ API Key not found. Please configure it in Streamlit Secrets.")
+
+# 5. Dashboard Layout
+c1, c2 = st.columns([1, 1], gap="medium")
+
+with c1:
+    st.markdown("### 1️⃣ Describe Task")
+    user_input = st.text_area(
+        "What do you need?",
+        height=200,
+        placeholder="Example: Count cells in Column A that are red and have value > 50..."
+    )
+    generate_btn = st.button("✨ Generate Magic Formula")
+
+with c2:
+    st.markdown("### 2️⃣ Your Result")
+    
+    if generate_btn and user_input:
+        with st.spinner("🤖 AI is coding..."):
+            try:
+                model = genai.GenerativeModel('gemini-pro')
+                prompt = f"Act as a professional Excel developer. Give ONLY the formula for: {user_input}. No text."
+                response = model.generate_content(prompt)
+                
+                # Result Card
+                st.success("Formula Ready!")
+                st.code(response.text, language="excel")
+                
+                # Explanation inside an expander to keep it clean
+                explanation = model.generate_content(f"Explain this excel formula in 1 line: {response.text}")
+                with st.expander("ℹ️ Logic Explanation"):
+                    st.write(explanation.text)
+                    
+            except Exception as e:
+                st.error("Connection Error. Try again.")
+    
+    elif not user_input:
+         st.info("Waiting for your input on the left...")
+
+# Footer
+st.markdown("---")
+st.markdown("<center style='color: #555;'>Designed for Professionals</center>", unsafe_allow_html=True)
