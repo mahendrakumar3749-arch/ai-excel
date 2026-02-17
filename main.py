@@ -89,4 +89,106 @@ st.markdown("""
     }
 
     /* Hide Streamlit Junk */
-    #MainMenu
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    </style>
+    """, unsafe_allow_html=True)
+
+# 4. Header Section
+col_logo, col_head = st.columns([1, 14])
+with col_logo:
+    st.image("https://upload.wikimedia.org/wikipedia/commons/3/34/Microsoft_Office_Excel_%282019%E2%80%93present%29.svg", width=65)
+with col_head:
+    st.title("AI Excel Workspace")
+    st.markdown("##### Enterprise-grade automation suite")
+
+st.markdown("---")
+
+# API Setup
+if "GOOGLE_API_KEY" in st.secrets:
+    genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
+else:
+    st.error("⚠️ API Key is missing.")
+    st.stop()
+
+# 5. Sidebar with Card Effect
+with st.sidebar:
+    st.markdown("### 📜 Recent Activity")
+    st.markdown("---")
+    if len(st.session_state.history) > 0:
+        for item in reversed(st.session_state.history[-5:]): # Show last 5
+            st.caption(f"🕒 {item['type']}")
+            st.code(item['code'], language="excel")
+            st.markdown("---")
+    else:
+        st.info("No history yet. Start generating!")
+
+# 6. Main Tabs (The "Pill" Design)
+tab1, tab2, tab3 = st.tabs(["📊 Formula Generator", "🤖 VBA Macros", "💾 SQL Queries"])
+
+# --- TAB 1: FORMULA ---
+with tab1:
+    st.markdown("#### &nbsp;") # Spacer
+    c1, c2 = st.columns([1, 1], gap="large")
+    
+    with c1:
+        st.markdown("##### 1️⃣ Input Requirement")
+        input_f = st.text_area("What do you need?", height=220, placeholder="Example: If Column A is 'Yes', sum Column B. Otherwise, leave blank.")
+        btn_f = st.button("Generate Formula 🚀", key="f_btn")
+    
+    with c2:
+        st.markdown("##### 2️⃣ Result")
+        if btn_f and input_f:
+            with st.spinner("Processing..."):
+                try:
+                    model = genai.GenerativeModel('gemini-pro')
+                    resp = model.generate_content(f"Excel formula for: {input_f}. Only code.")
+                    
+                    st.success("✅ Generated Successfully")
+                    st.code(resp.text, language="excel")
+                    
+                    # Logic Explanation Card
+                    expl = model.generate_content(f"Explain this excel formula in 1 short sentence: {resp.text}")
+                    st.info(f"ℹ️ **Logic:** {expl.text}")
+                    
+                    st.session_state.history.append({"type": "Formula", "code": resp.text})
+                except Exception as e:
+                    st.error("Error connecting to AI.")
+        elif not input_f and btn_f:
+            st.warning("Please describe your problem first.")
+        else:
+            st.info("Waiting for input...")
+
+# --- TAB 2: MACROS ---
+with tab2:
+    st.markdown("#### &nbsp;")
+    c1, c2 = st.columns([1, 1], gap="large")
+    with c1:
+        st.markdown("##### 1️⃣ Macro Description")
+        input_v = st.text_area("Describe Automation", height=220, placeholder="Example: Create a button that saves the current sheet as PDF.")
+        btn_v = st.button("Generate VBA Code 📜", key="v_btn")
+    
+    with c2:
+        st.markdown("##### 2️⃣ VBA Code")
+        if btn_v and input_v:
+            with st.spinner("Coding..."):
+                try:
+                    model = genai.GenerativeModel('gemini-pro')
+                    resp = model.generate_content(f"VBA code for: {input_v}. Only code.")
+                    st.success("✅ Macro Created")
+                    st.code(resp.text, language="vb")
+                    st.session_state.history.append({"type": "Macro", "code": "VBA Code Generated"})
+                except:
+                    st.error("Error.")
+
+# --- TAB 3: SQL ---
+with tab3:
+    st.markdown("#### &nbsp;")
+    input_s = st.text_area("Describe Query", height=150, placeholder="Select users where date is today...")
+    if st.button("Generate SQL 🗄️", key="s_btn"):
+        with st.spinner("Querying..."):
+            model = genai.GenerativeModel('gemini-pro')
+            resp = model.generate_content(f"SQL query for: {input_s}. Only code.")
+            st.code(resp.text, language="sql")
+            st.session_state.history.append({"type": "SQL", "code": resp.text})
