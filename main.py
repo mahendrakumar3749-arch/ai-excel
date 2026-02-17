@@ -1,94 +1,47 @@
 import streamlit as st
 import google.generativeai as genai
+import os
 
-# 1. Page Configuration
-st.set_page_config(
-    page_title="AI Excel Expert",
-    page_icon="📗",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
+# 1. Page Config
+st.set_page_config(page_title="AI Excel Tool", layout="wide")
 
-# 2. Professional CSS (Excel Look)
+# 2. Simple CSS
 st.markdown("""
-    <style>
-    .stApp {
-        background-color: #f8f9fa;
-        color: #212529;
-    }
-    .stTextArea textarea {
-        background-color: #ffffff;
-        border: 1px solid #ced4da;
-        border-radius: 8px;
-    }
-    .stButton>button {
-        background-color: #107c41;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        height: 3em;
-        width: 100%;
-        font-weight: bold;
-        font-size: 16px;
-        transition: 0.3s;
-    }
-    .stButton>button:hover {
-        background-color: #0c5e31;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    header {visibility: hidden;}
-    </style>
-    """, unsafe_allow_html=True)
+<style>
+    .stApp { background-color: #ffffff; color: #333333; }
+    .stButton>button { background-color: #107c41; color: white; width: 100%; }
+    textarea { border: 1px solid #ccc; border-radius: 5px; }
+</style>
+""", unsafe_allow_html=True)
 
-# 3. Sidebar
-with st.sidebar:
-    st.image("https://upload.wikimedia.org/wikipedia/commons/3/34/Microsoft_Office_Excel_%282019%E2%80%93present%29.svg", width=60)
-    st.title("Excel AI Tool")
-    st.markdown("---")
-    st.info("💡 **Tip:** Be specific! (e.g., 'Sum Column A if B is > 50')")
-    st.caption("© 2026 AI Excel Wrapper")
+# 3. Header
+st.title("📗 AI Excel Formula Generator")
+st.write("---")
 
-# 4. Main Header
-st.title("📗 Excel Formula Generator")
-st.markdown("Turn your instructions into complex Excel formulas instantly.")
-st.markdown("---")
+# 4. Secure API Setup
+api_key = None
+if "GOOGLE_API_KEY" in st.secrets:
+    api_key = st.secrets["GOOGLE_API_KEY"]
+    genai.configure(api_key=api_key)
+else:
+    st.error("🚨 Error: API Key is missing. Please check Secrets.")
+    st.stop()
 
-# 5. API Setup
-try:
-    if "GOOGLE_API_KEY" in st.secrets:
-        genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
-    else:
-        st.error("API Key Missing")
-except:
-    st.error("Configuration Error")
-
-# 6. Dashboard Layout
-col1, col2 = st.columns([1, 1], gap="large")
+# 5. App Logic
+col1, col2 = st.columns(2)
 
 with col1:
-    st.subheader("1️⃣ Describe Problem")
-    user_input = st.text_area("Type here...", height=250, placeholder="Example: I want to count cells in Column A that contain 'Paid'...")
-    generate_btn = st.button("Generate Formula 🚀")
+    st.subheader("Input")
+    user_input = st.text_area("Describe your problem:", height=150)
+    btn = st.button("Generate Formula 🚀")
 
 with col2:
-    st.subheader("2️⃣ Your Result")
-    
-    if generate_btn and user_input:
-        with st.spinner("AI is thinking..."):
-            try:
-                model = genai.GenerativeModel('gemini-pro')
-                response = model.generate_content(f"Act as an Excel Expert. Give ONLY the Excel formula for: {user_input}. Do not write explanation.")
-                
-                # Logic explanation
-                explanation = model.generate_content(f"Explain this excel formula in 1 short sentence: {response.text}")
-                
-                st.success("✅ Formula Ready!")
-                st.code(response.text, language="excel")
-                st.info(f"ℹ️ **Logic:** {explanation.text}")
-                
-            except Exception as e:
-                st.error(f"Error: {e}")
-
-    elif not user
+    st.subheader("Result")
+    if btn and user_input:
+        try:
+            model = genai.GenerativeModel('gemini-pro')
+            response = model.generate_content(f"Excel formula for: {user_input}")
+            st.success("Success!")
+            st.code(response.text, language="excel")
+        except Exception as e:
+            st.error(f"Error: {e}")
