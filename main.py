@@ -1,91 +1,70 @@
 import streamlit as st
 import google.generativeai as genai
 
-# 1. Page Setup (Wide & Professional)
+# 1. Page Config (Excel Style)
 st.set_page_config(
-    page_title="AI Excel Pro",
-    page_icon="💎",
+    page_title="AI Excel Expert",
+    page_icon="📗",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
-# 2. ULTIMATE PRO CSS (The "Expensive" Look)
+# 2. Modern "Clean" CSS
 st.markdown("""
     <style>
-    /* Main Background - Dark Midnight Blue */
+    /* Main Background - Light Grey for depth */
     .stApp {
-        background-color: #050505;
-        background-image: radial-gradient(circle at 50% 0%, #1c1c2e 0%, #050505 100%);
-        color: #e0e0e0;
+        background-color: #f8f9fa;
+        color: #212529;
     }
     
-    /* Input Areas - Glassmorphism Style */
-    .stTextArea textarea {
-        background-color: rgba(255, 255, 255, 0.05);
-        color: #ffffff;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 12px;
-        font-size: 16px;
+    /* White Cards for Input/Output */
+    div.stTextArea, div.stMarkdown {
+        background-color: #ffffff;
+        padding: 10px;
+        border-radius: 10px;
+        # box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Optional shadow */
     }
-    .stTextArea textarea:focus {
-        border: 1px solid #FFD700; /* Gold Border on Focus */
-        box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
-    }
-
-    /* The "Money" Button (Gold Gradient) */
+    
+    /* Excel Green Button */
     .stButton>button {
-        background: linear-gradient(135deg, #FFD700 0%, #FDB931 100%);
-        color: #000000;
+        background-color: #107c41; /* Excel Green */
+        color: white;
         border: none;
-        padding: 15px 32px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 18px;
-        font-weight: 800;
-        margin: 4px 2px;
-        cursor: pointer;
-        border-radius: 50px;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: bold;
+        padding: 0.5rem 1rem;
+        transition: 0.3s;
         width: 100%;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(253, 185, 49, 0.4);
     }
     .stButton>button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(253, 185, 49, 0.6);
+        background-color: #0c5e31; /* Darker Green on Hover */
+        color: white;
     }
 
-    /* Headers */
+    /* Titles */
     h1 {
-        font-family: 'Helvetica Neue', sans-serif;
-        font-weight: 700;
-        color: #ffffff;
-        letter-spacing: -1px;
+        color: #107c41;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-    h3 {
-        color: #a0a0a0 !important;
-        font-weight: 400;
-    }
-
-    /* Success Message Box */
-    .stSuccess {
-        background-color: rgba(0, 255, 0, 0.1);
-        border-left: 5px solid #00ff00;
-        color: #00ff00;
-    }
-
-    /* Hide Streamlit Junk */
+    
+    /* Remove default Streamlit Menu */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
     </style>
     """, unsafe_allow_html=True)
 
-# 3. Sidebar (Premium Menu)
+# 3. Sidebar (Menu)
 with st.sidebar:
     st.image("https://raw.githubusercontent.com/mahendrakumar3749-arch/ai-excel/main/input_file_0.png", width=80)
-    st.markdown("### 💎 AI Excel Pro")
+    st.title("Excel AI Tool")
+    st.info("💡 **Tip:** Be clear about column names (e.g., 'Sum of Column A').")
     st.markdown("---")
-    st.success("Plan: **Professional**")
-    st.markdown("Use this tool to generate complex formulas, VBA macros, and SQL queries instantly.")
-    st.markdown("---")
+    st.caption("© 2026 Professional Tools Inc.")
+
+# 4. Header Section
+col_logo, col_head = st.columns([1, 12])
+with col_logo:
+    st.image("
