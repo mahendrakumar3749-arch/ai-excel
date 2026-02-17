@@ -135,4 +135,65 @@ with tab1:
     
     with c1:
         st.subheader("1️⃣ Input Requirement")
-        input_f = st.text_area("Describe logic...", height=200, placeholder="Example: Sum Column
+        input_f = st.text_area("Describe logic...", height=200, placeholder="Example: Sum Column A if Column B contains 'Paid' and Date is Today.")
+        btn_f = st.button("Generate Formula ⚡", key="btn_f")
+    
+    with c2:
+        st.subheader("2️⃣ Result")
+        if btn_f and input_f:
+            with st.spinner("Analyzing..."):
+                try:
+                    model = genai.GenerativeModel('gemini-pro')
+                    resp = model.generate_content(f"Act as an Excel Expert. Excel formula for: {input_f}. Only code.")
+                    
+                    st.success("✅ Formula Generated")
+                    st.code(resp.text, language="excel")
+                    
+                    # Logic
+                    expl = model.generate_content(f"Explain this excel formula in 1 short English sentence: {resp.text}")
+                    st.info(f"ℹ️ **Logic:** {expl.text}")
+                    
+                    # Save to History
+                    st.session_state.history.append({"type": "Formula", "code": resp.text})
+                    
+                except Exception as e:
+                    st.error("Connection Error.")
+
+# --- TAB 2: MACROS ---
+with tab2:
+    st.markdown("### &nbsp;")
+    st.info("💡 **Macros** allow you to automate repetitive tasks (e.g., Save as PDF, Email Sheet).")
+    c1, c2 = st.columns([1, 1], gap="large")
+    
+    with c1:
+        st.subheader("1️⃣ Automation Task")
+        input_v = st.text_area("Describe what the macro should do...", height=200, placeholder="Example: Create a button that clears cells A1:B10 and saves the file.")
+        btn_v = st.button("Generate Macro 📜", key="btn_v")
+    
+    with c2:
+        st.subheader("2️⃣ VBA Code")
+        if btn_v and input_v:
+            with st.spinner("Writing VBA Code..."):
+                try:
+                    model = genai.GenerativeModel('gemini-pro')
+                    resp = model.generate_content(f"Write a VBA Macro for: {input_v}. Only code.")
+                    
+                    st.success("✅ Code Ready")
+                    st.code(resp.text, language="vb")
+                    st.session_state.history.append({"type": "VBA", "code": "View in VBA Tab"})
+                except:
+                    st.error("Error.")
+
+# --- TAB 3: SQL ---
+with tab3:
+    st.markdown("### &nbsp;")
+    input_s = st.text_area("Write your data question...", height=150, placeholder="Example: Select all customers from 'Users' table who signed up in 2024.")
+    if st.button("Generate SQL Query 🗄️", key="btn_s"):
+        with st.spinner("Querying..."):
+            try:
+                model = genai.GenerativeModel('gemini-pro')
+                resp = model.generate_content(f"SQL query for: {input_s}. Only code.")
+                st.code(resp.text, language="sql")
+                st.session_state.history.append({"type": "SQL", "code": resp.text})
+            except:
+                st.error("Error.")
