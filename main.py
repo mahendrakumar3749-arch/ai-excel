@@ -1,127 +1,91 @@
 import streamlit as st
 import google.generativeai as genai
 
-# 1. Page Configuration
+# 1. Page Setup (Wide & Professional)
 st.set_page_config(
-    page_title="AI Excel Wizard",
-    page_icon="⚡",
+    page_title="AI Excel Pro",
+    page_icon="💎",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
-# 2. PREMIUM DARK THEME CSS (Design Magic)
+# 2. ULTIMATE PRO CSS (The "Expensive" Look)
 st.markdown("""
     <style>
-    /* Dark Background */
+    /* Main Background - Dark Midnight Blue */
     .stApp {
-        background-image: linear-gradient(to right bottom, #0e1117, #161b22, #0d1117);
-        color: #ffffff;
+        background-color: #050505;
+        background-image: radial-gradient(circle at 50% 0%, #1c1c2e 0%, #050505 100%);
+        color: #e0e0e0;
     }
     
-    /* Input Box Styling */
+    /* Input Areas - Glassmorphism Style */
     .stTextArea textarea {
-        background-color: #1f2937;
-        color: white;
-        border: 1px solid #374151;
-        border-radius: 10px;
+        background-color: rgba(255, 255, 255, 0.05);
+        color: #ffffff;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        font-size: 16px;
     }
-    
-    /* Button Styling */
+    .stTextArea textarea:focus {
+        border: 1px solid #FFD700; /* Gold Border on Focus */
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+    }
+
+    /* The "Money" Button (Gold Gradient) */
     .stButton>button {
-        width: 100%;
-        background: linear-gradient(90deg, #FF4B4B 0%, #FF914D 100%);
-        color: white;
-        font-weight: bold;
+        background: linear-gradient(135deg, #FFD700 0%, #FDB931 100%);
+        color: #000000;
         border: none;
-        border-radius: 8px;
-        padding: 12px;
-        transition: 0.3s;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 18px;
+        font-weight: 800;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 50px;
+        width: 100%;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(253, 185, 49, 0.4);
     }
     .stButton>button:hover {
-        transform: scale(1.02);
-        box-shadow: 0px 4px 15px rgba(255, 75, 75, 0.4);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(253, 185, 49, 0.6);
     }
 
-    /* Headings */
+    /* Headers */
     h1 {
-        background: -webkit-linear-gradient(#eee, #999);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        font-family: 'Helvetica Neue', sans-serif;
         font-weight: 700;
+        color: #ffffff;
+        letter-spacing: -1px;
     }
-    h2, h3 {
-        color: #e0e0e0 !important;
+    h3 {
+        color: #a0a0a0 !important;
+        font-weight: 400;
     }
 
-    /* Hide Streamlit Branding */
+    /* Success Message Box */
+    .stSuccess {
+        background-color: rgba(0, 255, 0, 0.1);
+        border-left: 5px solid #00ff00;
+        color: #00ff00;
+    }
+
+    /* Hide Streamlit Junk */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
     </style>
     """, unsafe_allow_html=True)
 
-# 3. Sidebar
+# 3. Sidebar (Premium Menu)
 with st.sidebar:
-    st.image("https://raw.githubusercontent.com/mahendrakumar3749-arch/ai-excel/main/input_file_0.png", width=100)
-    st.title("Settings")
-    st.info("💡 Pro Tip: Be specific with column names (e.g., 'Col A', 'Col B').")
+    st.image("https://raw.githubusercontent.com/mahendrakumar3749-arch/ai-excel/main/input_file_0.png", width=80)
+    st.markdown("### 💎 AI Excel Pro")
     st.markdown("---")
-    st.caption("v2.0 | AI Excel Wizard")
-
-# 4. Main Header Area
-col_logo, col_title = st.columns([1, 10])
-with col_logo:
-    st.image("https://raw.githubusercontent.com/mahendrakumar3749-arch/ai-excel/main/input_file_0.png", width=60)
-with col_title:
-    st.title("AI Excel Wizard Pro")
-    st.caption("🚀 Generating complex formulas in milliseconds.")
-
-st.markdown("---")
-
-# API Setup
-try:
-    api_key = st.secrets["GOOGLE_API_KEY"]
-    genai.configure(api_key=api_key)
-except:
-    st.warning("⚠️ API Key not found. Please configure it in Streamlit Secrets.")
-
-# 5. Dashboard Layout
-c1, c2 = st.columns([1, 1], gap="medium")
-
-with c1:
-    st.markdown("### 1️⃣ Describe Task")
-    user_input = st.text_area(
-        "What do you need?",
-        height=200,
-        placeholder="Example: Count cells in Column A that are red and have value > 50..."
-    )
-    generate_btn = st.button("✨ Generate Magic Formula")
-
-with c2:
-    st.markdown("### 2️⃣ Your Result")
-    
-    if generate_btn and user_input:
-        with st.spinner("🤖 AI is coding..."):
-            try:
-                model = genai.GenerativeModel('gemini-pro')
-                prompt = f"Act as a professional Excel developer. Give ONLY the formula for: {user_input}. No text."
-                response = model.generate_content(prompt)
-                
-                # Result Card
-                st.success("Formula Ready!")
-                st.code(response.text, language="excel")
-                
-                # Explanation inside an expander to keep it clean
-                explanation = model.generate_content(f"Explain this excel formula in 1 line: {response.text}")
-                with st.expander("ℹ️ Logic Explanation"):
-                    st.write(explanation.text)
-                    
-            except Exception as e:
-                st.error("Connection Error. Try again.")
-    
-    elif not user_input:
-         st.info("Waiting for your input on the left...")
-
-# Footer
-st.markdown("---")
-st.markdown("<center style='color: #555;'>Designed for Professionals</center>", unsafe_allow_html=True)
+    st.success("Plan: **Professional**")
+    st.markdown("Use this tool to generate complex formulas, VBA macros, and SQL queries instantly.")
+    st.markdown("---")
