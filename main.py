@@ -3,9 +3,9 @@ import google.generativeai as genai
 
 # पेज सेटअप
 st.set_page_config(
-    page_title="AI Excel", # यहाँ अपना पसंदीदा नाम लिखें
-    page_icon="📊",               # यहाँ आप कोई भी Emoji लगा सकते हैं जो आइकन बनेगा
-    layout="wide"
+    page_title="AI Excel", 
+    page_icon="📊", 
+    layout="centered"
 )
 st.image("Gemini_Generated_Image_n2q0lvn2q0lvn2q0.png", width=150)
 st.title("📊 Excel Formula Generator")
@@ -53,5 +53,6 @@ if st.button("Formula बनाओ 🚀"):
         except Exception as e:
 
             st.error(f"Error: {e}")
+
 
 
