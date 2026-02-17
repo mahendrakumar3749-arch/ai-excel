@@ -1,59 +1,36 @@
 import streamlit as st
-import google.generativeai as genai
+import sys
 
-# 1. Page Configuration
-st.set_page_config(
-    page_title="AI Excel Expert",
-    page_icon="📗",
-    layout="wide"
-)
+st.set_page_config(page_title="Error Finder", page_icon="🕵️")
 
-# 2. Styling (Clean & Safe)
-st.markdown("""
-    <style>
-    .stApp {
-        background-color: #ffffff;
-        color: #333333;
-    }
-    .stButton>button {
-        background-color: #107c41;
-        color: white;
-        width: 100%;
-        font-weight: bold;
-        border-radius: 5px;
-        height: 3em;
-    }
-    .stTextArea textarea {
-        background-color: #f0f2f6;
-        border-radius: 10px;
-    }
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    header {visibility: hidden;}
-    </style>
-    """, unsafe_allow_html=True)
+st.title("🕵️ एरर पकड़ने वाला (Error Finder)")
 
-# 3. Header (Using Emoji instead of Image to prevent errors)
-st.title("📗 AI Excel Formula Pro")
-st.markdown("Generates complex formulas instantly.")
-st.markdown("---")
+# 1. Check Library
+st.write("Checking Library...")
+try:
+    import google.generativeai as genai
+    st.success("✅ Library (google-generativeai) सही है!")
+except ImportError as e:
+    st.error(f"❌ Library Missing: {e}")
+    st.warning("⚠️ Solution: अपने GitHub पर 'requirements.txt' नाम की फाइल बनाएं और उसमें 'google-generativeai' लिखें।")
+    st.stop()
 
-# 4. API Setup (With Error Handling)
+# 2. Check API Key
+st.write("Checking API Key...")
 try:
     if "GOOGLE_API_KEY" in st.secrets:
-        genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
+        api_key = st.secrets["GOOGLE_API_KEY"]
+        genai.configure(api_key=api_key)
+        st.success("✅ API Key कनेक्ट हो गई!")
     else:
-        st.error("🚨 Error: API Key is missing in Secrets.")
+        st.error("❌ API Key नहीं मिली!")
+        st.info("Solution: Streamlit Settings > Secrets में जाकर GOOGLE_API_KEY चेक करें।")
+        st.stop()
 except Exception as e:
-    st.error(f"Configuration Error: {e}")
+    st.error(f"❌ API Key Error: {e}")
+    st.stop()
 
-# 5. Main Dashboard
-c1, c2 = st.columns([1, 1])
-
-with c1:
-    st.subheader("1️⃣ Describe Problem")
-    user_input = st.text_area("Type here...", height=200, placeholder="Example: Sum Column A if B is 'Yes'.")
-    generate_btn = st.button("Generate Formula 🚀")
-
-with c2:
-    st.subheader("2
+# 3. Final Result
+st.balloons()
+st.success("🎉 सब कुछ ठीक है! अब आप अपना मेन कोड डाल सकते हैं।")
+st.write("अगर आपको यह हरे रंग के बॉक्स (Green Boxes) दिख रहे हैं, तो इसका मतलब आपका सेटअप 100% सही है।")
