@@ -7,6 +7,7 @@ st.set_page_config(
     page_icon="📊",               # यहाँ आप कोई भी Emoji लगा सकते हैं जो आइकन बनेगा
     layout="wide"
 )
+st.image("Gemini_Generated_Image_n2q0lvn2q0lvn2q0.png", width=150)
 st.title("📊 Excel Formula Generator")
 st.write("अपनी समस्या लिखें और चुटकियों में Excel फार्मूला पाएं!")
 
@@ -52,4 +53,5 @@ if st.button("Formula बनाओ 🚀"):
         except Exception as e:
 
             st.error(f"Error: {e}")
+
 
