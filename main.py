@@ -1,70 +1,59 @@
 import streamlit as st
 import google.generativeai as genai
 
-# 1. Page Config (Excel Style)
+# 1. Page Configuration
 st.set_page_config(
     page_title="AI Excel Expert",
     page_icon="📗",
-    layout="wide",
-    initial_sidebar_state="collapsed"
+    layout="wide"
 )
 
-# 2. Modern "Clean" CSS
+# 2. Styling (Clean & Safe)
 st.markdown("""
     <style>
-    /* Main Background - Light Grey for depth */
     .stApp {
-        background-color: #f8f9fa;
-        color: #212529;
-    }
-    
-    /* White Cards for Input/Output */
-    div.stTextArea, div.stMarkdown {
         background-color: #ffffff;
-        padding: 10px;
-        border-radius: 10px;
-        # box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Optional shadow */
+        color: #333333;
     }
-    
-    /* Excel Green Button */
     .stButton>button {
-        background-color: #107c41; /* Excel Green */
+        background-color: #107c41;
         color: white;
-        border: none;
-        border-radius: 5px;
-        font-size: 16px;
-        font-weight: bold;
-        padding: 0.5rem 1rem;
-        transition: 0.3s;
         width: 100%;
+        font-weight: bold;
+        border-radius: 5px;
+        height: 3em;
     }
-    .stButton>button:hover {
-        background-color: #0c5e31; /* Darker Green on Hover */
-        color: white;
+    .stTextArea textarea {
+        background-color: #f0f2f6;
+        border-radius: 10px;
     }
-
-    /* Titles */
-    h1 {
-        color: #107c41;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    
-    /* Remove default Streamlit Menu */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
     </style>
     """, unsafe_allow_html=True)
 
-# 3. Sidebar (Menu)
-with st.sidebar:
-    st.image("https://raw.githubusercontent.com/mahendrakumar3749-arch/ai-excel/main/input_file_0.png", width=80)
-    st.title("Excel AI Tool")
-    st.info("💡 **Tip:** Be clear about column names (e.g., 'Sum of Column A').")
-    st.markdown("---")
-    st.caption("© 2026 Professional Tools Inc.")
+# 3. Header (Using Emoji instead of Image to prevent errors)
+st.title("📗 AI Excel Formula Pro")
+st.markdown("Generates complex formulas instantly.")
+st.markdown("---")
 
-# 4. Header Section
-col_logo, col_head = st.columns([1, 12])
-with col_logo:
-    st.image("
+# 4. API Setup (With Error Handling)
+try:
+    if "GOOGLE_API_KEY" in st.secrets:
+        genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
+    else:
+        st.error("🚨 Error: API Key is missing in Secrets.")
+except Exception as e:
+    st.error(f"Configuration Error: {e}")
+
+# 5. Main Dashboard
+c1, c2 = st.columns([1, 1])
+
+with c1:
+    st.subheader("1️⃣ Describe Problem")
+    user_input = st.text_area("Type here...", height=200, placeholder="Example: Sum Column A if B is 'Yes'.")
+    generate_btn = st.button("Generate Formula 🚀")
+
+with c2:
+    st.subheader("2
