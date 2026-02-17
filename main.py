@@ -2,7 +2,11 @@ import streamlit as st
 import google.generativeai as genai
 
 # पेज सेटअप
-st.set_page_config(page_title="Excel Formula Wizard", page_icon="📊")
+st.set_page_config(
+    page_title="AI Excel", # यहाँ अपना पसंदीदा नाम लिखें
+    page_icon="📊",               # यहाँ आप कोई भी Emoji लगा सकते हैं जो आइकन बनेगा
+    layout="wide"
+)
 st.title("📊 Excel Formula Generator")
 st.write("अपनी समस्या लिखें और चुटकियों में Excel फार्मूला पाएं!")
 
@@ -48,3 +52,4 @@ if st.button("Formula बनाओ 🚀"):
         except Exception as e:
 
             st.error(f"Error: {e}")
+
