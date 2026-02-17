@@ -7,7 +7,7 @@ st.title("📊 Excel Formula Generator")
 st.write("अपनी समस्या लिखें और चुटकियों में Excel फार्मूला पाएं!")
 
 # API Key मांगना
-api_key = st.sidebar.text_input("Google Gemini API Key यहाँ डालें", type="password")
+api_key = st.secrets["GOOGLE_API_KEY"]
 
 # यूजर का सवाल
 user_query = st.text_area("आपको क्या करना है? (जैसे: A और B को जोड़ो अगर C में 'Pass' लिखा हो)", height=100)
@@ -46,4 +46,5 @@ if st.button("Formula बनाओ 🚀"):
                 st.code(response.text.strip(), language='excel')
                 
         except Exception as e:
+
             st.error(f"Error: {e}")
